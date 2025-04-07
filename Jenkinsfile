@@ -2,24 +2,18 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Repo') {
-            steps {
-                git 'https://github.com/obinnho00/Jenkines_setup.git'
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
-                sh 'python -m pip install --upgrade pip'
-                sh 'pip install -r Jenkines_Practice/requirements.txt'
+                sh 'pip install -r Jenkins_Practice/requirements.txt --break-system-packages'
             }
         }
 
-        stage('Run Unit Tests') {
+        stage('Run Tests') {
             steps {
                 sh '''
-                    mkdir -p test-reports
-                    python -m xmlrunner discover -s Jenkines_Practice -o test-reports
+                    mkdir -p Jenkins_Practice/test-reports
+                    python -m xmlrunner discover -s Jenkins_Practice -p "test_*.py" -o Jenkins_Practice/test-reports
+                    ls -l Jenkins_Practice/test-reports
                 '''
             }
         }
@@ -27,8 +21,8 @@ pipeline {
 
     post {
         always {
-            echo 'Build Finished.'
-            junit 'test-reports/*.xml'
+            echo '✅ Build finished.'
+            junit 'Jenkins_Practice/test-reports/*.xml'
         }
     }
 }
