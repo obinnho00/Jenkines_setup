@@ -12,7 +12,7 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p test-reports
-                    python -m xmlrunner discover -s . -p "test_*.py" -o test-reports
+                    python3 -m xmlrunner discover -s . -p "test_*.py" -o test-reports
                     ls -l test-reports
                 '''
             }
