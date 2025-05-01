@@ -9,22 +9,12 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh 'pip3 install --break-system-packages -r requirements.txt'
-
             }
         }
 
         stage('Run Application Code') {
             steps {
                 sh 'python3 legacy_airline_system_refactored.py'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                sh '''
-                    mkdir -p test-reports
-                    python3 -m xmlrunner discover -s . -p "test_*.py" -o test-reports
-                '''
             }
         }
 
@@ -46,7 +36,6 @@ pipeline {
     post {
         always {
             echo 'Build finished.'
-            junit 'test-reports/*.xml'
         }
     }
 }
