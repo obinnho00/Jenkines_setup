@@ -1,5 +1,10 @@
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'python:3.11-slim'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
 
     environment {
         DOCKER_IMAGE = 'arumi21/airline-system'
@@ -8,20 +13,12 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                script {
-                    try {
-                        sh 'pip install -r requirements.txt'
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        throw e
-                    }
-                }
+                sh 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Application Code') {
             steps {
-                // Run your main Python app
                 sh 'python legacy_airline_system_refactored.py'
             }
         }
@@ -37,18 +34,14 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    sh "docker build -t $DOCKER_IMAGE ."
-                }
+                sh "docker build -t $DOCKER_IMAGE ."
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                script {
-                    withDockerRegistry(credentialsId: 'dockerhub-creds', url: '') {
-                        sh "docker push $DOCKER_IMAGE"
-                    }
+                withDockerRegistry(credentialsId: 'dockerhub-creds', url: '') {
+                    sh "docker push $DOCKER_IMAGE"
                 }
             }
         }
