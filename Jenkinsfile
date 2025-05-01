@@ -3,12 +3,14 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'arumi21/airline-system'
+        DOCKER_USER = 'ARUMI21'
+        DOCKER_PASS = 'iA!906200'
     }
 
     stages {
         stage('Install Dependencies') {
             steps {
-                sh 'pip3 install --break-system-packages -r requirements.txt'
+                sh 'pip3 install -r requirements.txt'
             }
         }
 
@@ -20,15 +22,16 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $DOCKER_IMAGE ."
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
         stage('Push to Docker Hub') {
             steps {
-                withDockerRegistry(credentialsId: 'dockerhub-creds', url: '') {
-                    sh "docker push $DOCKER_IMAGE"
-                }
+                sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker push $DOCKER_IMAGE
+                '''
             }
         }
     }
