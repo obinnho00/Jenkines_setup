@@ -112,7 +112,7 @@ class AirlineSystem:
             logging.info(f" - {name}")
 
 
-# Main function
+
 if __name__ == '__main__':
     airline_system = AirlineSystem()
     flight = airline_system.flight_manager.add_flight("AI101", "New York", "London", datetime(2025, 5, 1, 18, 0), 420, "Boeing 777")
