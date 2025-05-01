@@ -1,5 +1,9 @@
 FROM python:3.9-slim
+
 WORKDIR /app
-COPY . /app
+
+COPY . .
+
 RUN pip install -r requirements.txt
+
 CMD ["python", "legacy_airline_system_refactored.py"]

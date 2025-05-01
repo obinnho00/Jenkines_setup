@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.11-slim'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         DOCKER_IMAGE = 'arumi21/airline-system'
@@ -13,13 +8,13 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                sh 'pip install -r requirements.txt'
+                sh 'pip3 install -r requirements.txt'
             }
         }
 
         stage('Run Application Code') {
             steps {
-                sh 'python legacy_airline_system_refactored.py'
+                sh 'python3 legacy_airline_system_refactored.py'
             }
         }
 
@@ -27,7 +22,7 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p test-reports
-                    python -m xmlrunner discover -s . -p "test_*.py" -o test-reports
+                    python3 -m xmlrunner discover -s . -p "test_*.py" -o test-reports
                 '''
             }
         }
