@@ -103,19 +103,22 @@ class AirlineSystem:
 
         if not flight:
             logging.error("Flight not found.")
-            return
+            return "Flight not found."
 
         crew = [c for c in self.crew_manager.crew_members if c['assigned_flight'] == flight_number]
         booked_passengers = [b['passenger']['name'] for b in self.booking_manager.bookings if b['flight']['flight_number'] == flight_number]
 
-        logging.info(f"Flight {flight_number} from {flight['origin']} to {flight['destination']}:")
-        logging.info(f"Departure: {flight['departure_time']} | Arrival: {flight['arrival_time']}")
-        logging.info("Crew Members:")
+        summary = f"Flight {flight_number} from {flight['origin']} to {flight['destination']}:\n"
+        summary += f"Departure: {flight['departure_time']} | Arrival: {flight['arrival_time']}\n"
+        summary += "Crew Members:\n"
         for c in crew:
-            logging.info(f" - {c['name']} ({c['role']})")
-        logging.info("Booked Passengers:")
+            summary += f" - {c['name']} ({c['role']})\n"
+        summary += "Booked Passengers:\n"
         for name in booked_passengers:
-            logging.info(f" - {name}")
+            summary += f" - {name}\n"
+
+        logging.info(summary)
+        return summary
 
 
 
