@@ -11,18 +11,24 @@ class FlightManager:
         self.flights = []
 
     def add_flight(self, flight_number, origin, destination, departure_time, duration_minutes, aircraft_type):
+        if isinstance(departure_time, str):
+            departure_time = datetime.strptime(departure_time, "%Y-%m-%d %H:%M")
+        
+        arrival_time = departure_time + timedelta(minutes=duration_minutes)
+
         flight = {
             'flight_number': flight_number,
             'origin': origin,
             'destination': destination,
             'departure_time': departure_time,
-            'arrival_time': departure_time + timedelta(minutes=duration_minutes),
+            'arrival_time': arrival_time,
             'aircraft_type': aircraft_type,
             'seats_available': MAX_SEATS
         }
         self.flights.append(flight)
         logging.info(f"Flight {flight_number} added.")
         return flight
+
 
 
 class PassengerManager:
